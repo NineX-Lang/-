@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hacker Sensi IA V4 Elite</title>
+<style>
+body{
+margin:0;
+background:black;
+font-family:Courier New, monospace;
+color:#00ff99;
+overflow-x:hidden;
+overflow-y:auto;
+}
+canvas{
+position:fixed;
+top:0;
+left:0;
+z-index:0;
+}
+.container{
+position:relative;
+z-index:2;
+max-width:500px;
+margin:20px auto 80px auto;
+padding:20px;
+background:#000000dd;
+border:1px solid #00ff99;
+border-radius:10px;
+box-shadow:0 0 20px #00ff99;
+}
+h1,h3{
+text-align:center;
+text-shadow:0 0 8px #00ff99;
+}
+input,select{
+width:100%;
+padding:10px;
+margin:6px 0 12px;
+background:black;
+border:1px solid #00ff99;
+color:#00ff99;
+}
+button{
+width:100%;
+padding:12px;
+margin:8px 0;
+background:#00ff99;
+border:none;
+font-weight:bold;
+cursor:pointer;
+}
+button:hover{
+background:#00ffaa;
+}
+.toggle{
+width:50px;
+height:25px;
+background:#444;
+border-radius:20px;
+position:relative;
+cursor:pointer;
+margin-bottom:15px;
+}
+.toggle-circle{
+width:20px;
+height:20px;
+background:#222;
+border-radius:50%;
+position:absolute;
+top:2.5px;
+left:3px;
+transition:0.3s;
+}
+.toggle.active{
+background:#0088ff;
+box-shadow:0 0 10px #0088ff;
+}
+.toggle.active .toggle-circle{
+left:27px;
+background:#00ccff;
+}
+.result{
+margin-top:15px;
+padding:10px;
+border:1px solid #00ff99;
+}
+#revolucionarBtn{
+position:fixed;
+bottom:20px;
+right:20px;
+width:auto;
+padding:10px 20px;
+z-index:5;
+}
+.spin{
+transform:rotateY(360deg);
+transition:1s;
+}
+#telaLogin{
+position:fixed;
+width:100%;
+height:100%;
+background:black;
+display:flex;
+justify-content:center;
+align-items:center;
+flex-direction:column;
+z-index:9999;
+}
+</style>
+</head>
+<body>
+
+<canvas id="matrix"></canvas>
+
+<div id="telaLogin">
+<h2 style="text-shadow:0 0 10px #00ff99;">Acesso Destinatário</h2>
+<input type="password" id="senhaEntrada" placeholder="Digite o código">
+<button onclick="verificarSenha()">Entrar</button>
+<p id="erroSenha" style="color:red;"></p>
+</div>
+
+<div class="container" id="mainBox">
+<h1>Hacker Sensi IA V4 Elite</h1>
+<h3>Configurações Base</h3>
+
+<label>Ativar DPI</label>
+<div class="toggle" id="dpiToggle">
+<div class="toggle-circle"></div>
+</div>
+
+<label>DPI</label>
+<input type="number" id="dpi" value="411">
+
+<label>KD</label>
+<input type="number" id="kd" value="2">
+
+<label>HS (%)</label>
+<input type="number" id="hs" value="50">
+
+<label>ID (referência)</label>
+<input type="text" id="id">
+
+<label>Tipo de Jogador</label>
+<select id="tipo">
+<option>Rush</option>
+<option>Suporte</option>
+<option>Atirador</option>
+<option>Granadeiro</option>
+<option>Capinha</option>
+</select>
+
+<h3>Configurações Avançadas</h3>
+
+<label>Precisão</label>
+<input type="number" id="precisao" value="80">
+
+<label>Velocidade Reflexo</label>
+<input type="number" id="reflexo" value="75">
+
+<label>Controle Recuo</label>
+<input type="number" id="recuo" value="70">
+
+<h3>Perfil do Dispositivo</h3>
+
+<label>Tipo de Celular</label>
+<select id="tipoCelular">
+<option value="0.5">Chipote</option>
+<option value="0.7">Comum</option>
+<option value="0.8">Marca Antiga</option>
+<option value="1.0">Bom</option>
+<option value="1.1">Rápido</option>
+<option value="1.2">Gamer</option>
+<option value="1.3">M-Pro 2016</option>
+<option value="0.9">Intermediário</option>
+<option value="0.6">Basic</option>
+</select>
+
+<label>Marca / Sistema</label>
+<select id="marcaCelular">
+<option value="1.0">Samsung</option>
+<option value="0.95">Huawei</option>
+<option value="0.9">Android</option>
+<option value="1.1">iPhone</option>
+</select>
+
+<button onclick="gerar()">Gerar Sensi</button>
+<button onclick="girar()">Girar</button>
+
+<div class="result" id="resultado">
+Resultado aparecerá aqui...
+</div>
+</div>
+
+<button id="revolucionarBtn" onclick="revolucionar()">🔒 Revolucionar</button>
+
+<script>
+
+/* MATRIX */
+let canvas=document.getElementById("matrix");
+let ctx=canvas.getContext("2d");
+canvas.height=window.innerHeight;
+canvas.width=window.innerWidth;
+let letters="01".split("");
+let fontSize=14;
+let columns=canvas.width/fontSize;
+let drops=[];
+for(let x=0;x<columns;x++) drops[x]=1;
+function draw(){
+ctx.fillStyle="rgba(0,0,0,0.05)";
+ctx.fillRect(0,0,canvas.width,canvas.height);
+ctx.fillStyle="#0f0";
+ctx.font=fontSize+"px monospace";
+for(let i=0;i<drops.length;i++){
+let text=letters[Math.floor(Math.random()*letters.length)];
+ctx.fillText(text,i*fontSize,drops[i]*fontSize);
+if(drops[i]*fontSize>canvas.height && Math.random()>0.975) drops[i]=0;
+drops[i]++;
+}
+}
+setInterval(draw,33);
+
+/* LOGIN */
+function verificarSenha(){
+let senha=document.getElementById("senhaEntrada").value;
+if(senha==="1808"){
+document.getElementById("telaLogin").style.display="none";
+}else{
+document.getElementById("erroSenha").innerText="Código incorreto.";
+}
+}
+
+/* DPI Toggle */
+let dpiAtivo=false;
+document.getElementById("dpiToggle").onclick=function(){
+this.classList.toggle("active");
+dpiAtivo=!dpiAtivo;
+gerar(); // recalcula resultado imediatamente
+}
+
+/* GERAR */
+function gerar(){
+let dpi=parseInt(document.getElementById("dpi").value);
+let kd=parseFloat(document.getElementById("kd").value);
+let hs=parseInt(document.getElementById("hs").value);
+let precisao=parseInt(document.getElementById("precisao").value);
+let reflexo=parseInt(document.getElementById("reflexo").value);
+let recuo=parseInt(document.getElementById("recuo").value);
+let tipoCel=parseFloat(document.getElementById("tipoCelular").value);
+let marcaCel=parseFloat(document.getElementById("marcaCelular").value);
+
+let base=(kd*20)+(hs*0.5)+(precisao*0.3)+(reflexo*0.2)+(recuo*0.1);
+base=base*tipoCel*marcaCel;
+
+let resultado="Geral: "+Math.round(base)+"<br>"+
+"Red Dot: "+Math.round(base-2)+"<br>"+
+"2x: "+Math.round(base-4)+"<br>"+
+"4x: "+Math.round(base-6)+"<br>"+
+"AWM: "+Math.round(base-10);
+
+if(dpiAtivo){
+resultado+="<br>DPI: "+dpi;
+}
+
+document.getElementById("resultado").innerHTML=resultado;
+}
+
+/* GIRAR */
+function girar(){
+let box=document.getElementById("mainBox");
+box.classList.add("spin");
+setTimeout(()=>{
+box.classList.remove("spin");
+gerar(); // gera nova Sensi após girar, respeitando toggle DPI
+},1000);
+}
+
+/* REVOLUCIONAR */
+function revolucionar(){
+let codigo=prompt("Digite o código revolucionário:");
+if(codigo==="180814NK"){
+alert("Modo Revolucionário Ativado.");
+}else{
+alert("Código incorreto.");
+}
+}
+
+</script>
+</body>
+  </html>
